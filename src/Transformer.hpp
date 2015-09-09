@@ -542,10 +542,7 @@ bool Transformation::get(const base::Time& atTime, T& result, bool interpolate) 
     }
 
     if(transformationChain.empty()) 
-    {
-        failedNoChain++;
-        return false;
-    }
+        return true;
     
     for(std::vector<TransformationElement *>::const_iterator it = transformationChain.begin(); it != transformationChain.end(); it++)
     {

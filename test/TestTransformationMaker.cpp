@@ -229,6 +229,16 @@ BOOST_AUTO_TEST_CASE( automatic_chain_generation_complex )
     BOOST_CHECK_EQUAL( gotSample, true );
 }
 
+BOOST_AUTO_TEST_CASE( identity )
+{
+    transformer::Transformer tf;
+    transformer::Transformation& id(tf.registerTransformation("frame", "frame"));
+    
+    Eigen::Affine3d identity;
+    BOOST_REQUIRE( id.get(base::Time::now(), identity, true) );
+    BOOST_REQUIRE( Eigen::Affine3d::Identity().isApprox(identity) );
+}
+
 BOOST_AUTO_TEST_CASE( clearing )
 {
     defaultInit();

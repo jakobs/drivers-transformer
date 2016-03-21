@@ -61,18 +61,21 @@ module Transformer
                         dynamic_transform p, joint_post => joint_pre
                     end
 
-                    axis_limit = j.axis.limit
-                    upper = axis_limit.upper || 0
-                    lower = axis_limit.lower || 0
-                    axis = j.axis.xyz
-                    if j.axis.use_parent_model_frame?
-                        # The axis is expressed in the parent model frame ...
-                        # Convert to joint frame
-                        joint2model = (joint2child * child2model)
-                        axis = joint2model.rotation.inverse * axis
+                    if j.type == 'fixed'
+                    else
+                        axis_limit = j.axis.limit
+                        upper = axis_limit.upper || 0
+                        lower = axis_limit.lower || 0
+                        axis = j.axis.xyz
+                        if j.axis.use_parent_model_frame?
+                            # The axis is expressed in the parent model frame ...
+                            # Convert to joint frame
+                            joint2model = (joint2child * child2model)
+                            axis = joint2model.rotation.inverse * axis
+                        end
+                        post2pre = j.transform_for((upper + lower) / 2, axis)
+                        example_transform post2pre, joint_post => joint_pre
                     end
-                    post2pre = j.transform_for((upper + lower) / 2, axis)
-                    example_transform post2pre, joint_post => joint_pre
                 end
 
                 root_links.each_value do |l|
